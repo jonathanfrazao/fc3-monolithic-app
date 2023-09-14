@@ -6,6 +6,8 @@ type EntityProps = {
     id?: Id;
     name: string;
     price: number;
+    createdAt?: Date;
+    updatedAt?: Date;
 };
 
 export default class InvoiceItems extends BaseEntity implements AggregateRoot {
