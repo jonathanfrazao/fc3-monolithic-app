@@ -36,7 +36,7 @@ export class InvoiceModel extends Model {
     zipCode: string;
 
     @HasMany(() => InvoiceItemModel)
-    items: InvoiceItemModel[];
+    declare items: InvoiceItemModel[];
 
     @Column({allowNull: false})
     createdAt: Date;
