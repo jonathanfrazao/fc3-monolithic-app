@@ -28,26 +28,20 @@ describe("InvoiceRepository test", () => {
 
     it("should create a invoice", async () => {
 
-        let items: InvoiceItems[] = []
-
         //Item 1
-        const invoiceItemProps = {
+        const invoiceItem = new InvoiceItems({
             id: new Id("1"),
             name: "Invoice Item 1",
             price: 20,
-        }
-        const invoiceItem = new InvoiceItems(invoiceItemProps)
-        items.push(invoiceItem)
+        })
         //
 
         //Item 2
-        const invoiceItemProps2 = {
+        const invoiceItem2 = new InvoiceItems({
             id: new Id("2"),
             name: "Invoice Item 2",
             price: 80,
-        }
-        const invoiceItem2 = new InvoiceItems(invoiceItemProps2)
-        items.push(invoiceItem2)
+        })
         //
 
         const invoiceProps = {
@@ -55,7 +49,7 @@ describe("InvoiceRepository test", () => {
             name: "Invoice 1",
             document: "123456789",
             address: new Address("Street", "1", "Complement", "City", "State", "123456789"),
-            items: items
+            items: [invoiceItem, invoiceItem2]
         };
 
         const invoice = new Invoice(invoiceProps);
@@ -75,36 +69,30 @@ describe("InvoiceRepository test", () => {
         expect(invoiceProps.address.complement).toEqual(invoiceDb.dataValues.complement);
         expect(invoiceProps.address.city).toEqual(invoiceDb.dataValues.city);
         expect(invoiceProps.address.zipCode).toEqual(invoiceDb.dataValues.zipCode);
-        expect(invoiceItemProps.id.id).toEqual(invoiceDb.dataValues.items[0].dataValues.id);
-        expect(invoiceItemProps.name).toEqual(invoiceDb.dataValues.items[0].dataValues.name);
-        expect(invoiceItemProps.price).toEqual(invoiceDb.dataValues.items[0].dataValues.price);
-        expect(invoiceItemProps2.id.id).toEqual(invoiceDb.dataValues.items[1].dataValues.id);
-        expect(invoiceItemProps2.name).toEqual(invoiceDb.dataValues.items[1].dataValues.name);
-        expect(invoiceItemProps2.price).toEqual(invoiceDb.dataValues.items[1].dataValues.price);
+        expect(invoiceItem.id.id).toEqual(invoiceDb.dataValues.items[0].dataValues.id);
+        expect(invoiceItem.name).toEqual(invoiceDb.dataValues.items[0].dataValues.name);
+        expect(invoiceItem.price).toEqual(invoiceDb.dataValues.items[0].dataValues.price);
+        expect(invoiceItem2.id.id).toEqual(invoiceDb.dataValues.items[1].dataValues.id);
+        expect(invoiceItem2.name).toEqual(invoiceDb.dataValues.items[1].dataValues.name);
+        expect(invoiceItem2.price).toEqual(invoiceDb.dataValues.items[1].dataValues.price);
     });
 
     it("should find a invoice", async () => {
 
-        let items: InvoiceItems[] = []
-
         //Item 1
-        const invoiceItemProps = {
+        const invoiceItem = new InvoiceItems({
             id: new Id("1"),
             name: "Invoice Item 1",
             price: 20,
-        }
-        const invoiceItem = new InvoiceItems(invoiceItemProps)
-        items.push(invoiceItem)
+        })
         //
 
         //Item 2
-        const invoiceItemProps2 = {
+        const invoiceItem2 = new InvoiceItems({
             id: new Id("2"),
             name: "Invoice Item 2",
             price: 80,
-        }
-        const invoiceItem2 = new InvoiceItems(invoiceItemProps2)
-        items.push(invoiceItem2)
+        })
         //
 
         const invoiceProps = {
@@ -112,7 +100,7 @@ describe("InvoiceRepository test", () => {
             name: "Invoice 1",
             document: "123456789",
             address: new Address("Street", "1", "Complement", "City", "State", "123456789"),
-            items: items
+            items: [invoiceItem, invoiceItem2]
         };
 
         const invoice = new Invoice(invoiceProps);
@@ -150,11 +138,11 @@ describe("InvoiceRepository test", () => {
         expect(invoiceProps.address.complement).toEqual(invoiceDb.address.complement);
         expect(invoiceProps.address.city).toEqual(invoiceDb.address.city);
         expect(invoiceProps.address.zipCode).toEqual(invoiceDb.address.zipCode);
-        expect(invoiceItemProps.id.id).toEqual(invoiceDb.items[0].id.id);
-        expect(invoiceItemProps.name).toEqual(invoiceDb.items[0].name);
-        expect(invoiceItemProps.price).toEqual(invoiceDb.items[0].price);
-        expect(invoiceItemProps2.id.id).toEqual(invoiceDb.items[1].id.id);
-        expect(invoiceItemProps2.name).toEqual(invoiceDb.items[1].name);
-        expect(invoiceItemProps2.price).toEqual(invoiceDb.items[1].price);
+        expect(invoiceItem.id.id).toEqual(invoiceDb.items[0].id.id);
+        expect(invoiceItem.name).toEqual(invoiceDb.items[0].name);
+        expect(invoiceItem.price).toEqual(invoiceDb.items[0].price);
+        expect(invoiceItem2.id.id).toEqual(invoiceDb.items[1].id.id);
+        expect(invoiceItem2.name).toEqual(invoiceDb.items[1].name);
+        expect(invoiceItem2.price).toEqual(invoiceDb.items[1].price);
     });
 });
