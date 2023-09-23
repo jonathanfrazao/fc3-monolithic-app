@@ -27,8 +27,14 @@ describe("ClientRepository test", () => {
         const client = new Client({
             id: new Id("1"),
             name: "Client 1",
+            document: "0000",
             email: "x@x.com",
-            address: "Address 1"
+            street: "Address 1",
+            complement: "complement",
+            number: "1",
+            city: "city",
+            state: "state",
+            zipcode: "zipCode"
         });
 
         const repository = new ClientRepository();
@@ -39,8 +45,14 @@ describe("ClientRepository test", () => {
         expect(clientDb).toBeDefined();
         expect(clientDb.dataValues.id).toBe(client.id.id);
         expect(clientDb.dataValues.name).toBe(client.name);
+        expect(clientDb.dataValues.document).toBe(client.document);
         expect(clientDb.dataValues.email).toBe(client.email);
-        expect(clientDb.dataValues.address).toBe(client.address);
+        expect(clientDb.dataValues.street).toBe(client.street);
+        expect(clientDb.dataValues.complement).toBe(client.complement);
+        expect(clientDb.dataValues.number).toBe(client.number);
+        expect(clientDb.dataValues.state).toBe(client.state);
+        expect(clientDb.dataValues.city).toBe(client.city);
+        expect(clientDb.dataValues.zipcode).toBe(client.zipcode);
         expect(clientDb.dataValues.createdAt).toStrictEqual(client.createdAt);
         expect(clientDb.dataValues.updatedAt).toStrictEqual(client.updatedAt);
     });
@@ -49,8 +61,14 @@ describe("ClientRepository test", () => {
         const client = await ClientModel.create({
             id: "1",
             name: "Client 1",
+            document: "0000",
             email: "x@x.com",
-            address: "Address 1",
+            street: "Address 1",
+            complement: "complement",
+            number: "1",
+            city: "city",
+            state: "state",
+            zipcode: "zipCode",
             createdAt: new Date(),
             updatedAt: new Date()
         });
@@ -60,8 +78,14 @@ describe("ClientRepository test", () => {
 
         expect(result.id.id).toEqual(client.dataValues.id);
         expect(result.name).toEqual(client.dataValues.name);
-        expect(result.email).toEqual(client.dataValues.email);
-        expect(result.address).toEqual(client.dataValues.address);
+        expect(result.document).toBe(client.dataValues.document);
+        expect(result.email).toBe(client.dataValues.email);
+        expect(result.street).toBe(client.dataValues.street);
+        expect(result.complement).toBe(client.dataValues.complement);
+        expect(result.number).toBe(client.dataValues.number);
+        expect(result.state).toBe(client.dataValues.state);
+        expect(result.city).toBe(client.dataValues.city);
+        expect(result.zipcode).toBe(client.dataValues.zipcode);
         expect(result.createdAt).toStrictEqual(client.dataValues.createdAt);
         expect(result.updatedAt).toStrictEqual(client.dataValues.updatedAt);
     });
