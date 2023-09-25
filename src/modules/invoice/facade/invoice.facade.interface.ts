@@ -1,5 +1,4 @@
 export interface GenerateInvoiceFacadeInputDto {
-    id: string;
     name: string;
     document: string;
     street: string;

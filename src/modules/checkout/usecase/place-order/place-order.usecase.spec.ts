@@ -94,7 +94,7 @@ describe("PlaceOrderUseCase unit test", () => {
 
         it("should return a product", async () => {
             const mockCatalogFacade = {
-                find: jest.fn().mockReturnValue({
+                find: jest.fn().mockResolvedValue({
                     id: "0",
                     name: "Product 0",
                     description: "Product 0 description",
@@ -114,7 +114,7 @@ describe("PlaceOrderUseCase unit test", () => {
                 })
             );
 
-            expect(mockCatalogFacade).toHaveBeenCalledTimes(1);
+            expect(mockCatalogFacade.find).toHaveBeenCalledTimes(1);
         });
     });
 
@@ -185,7 +185,6 @@ describe("PlaceOrderUseCase unit test", () => {
             }
 
             const mockClientFacade = {
-                add: jest.fn(),
                 find: jest.fn().mockResolvedValue(clientProps),
             };
 
@@ -195,20 +194,18 @@ describe("PlaceOrderUseCase unit test", () => {
 
             const mockCheckoutRepository = {
                 addOrder: jest.fn(),
-                findOrder: jest.fn(),
             }
 
             const mockInvoiceFacade = {
                 generateInvoice: jest.fn().mockResolvedValue({ id: "1i" }),
-                findInvoice: jest.fn(),
             }
 
             const placeOrderUseCase = new PlaceOrderUseCase(
-                mockClientFacade,
+                mockClientFacade as any,
                 null,
                 null,
-                mockCheckoutRepository,
-                mockInvoiceFacade,
+                mockCheckoutRepository as any,
+                mockInvoiceFacade as any,
                 mockPaymentFacade
             );
 
@@ -277,6 +274,64 @@ describe("PlaceOrderUseCase unit test", () => {
                 });
 
                 expect(mockInvoiceFacade.generateInvoice).toHaveBeenCalledTimes(0);
+            });
+
+            it("should not be approved", async () => {
+                mockPaymentFacade.process = mockPaymentFacade.process.mockReturnValue({
+                    transactionId: "1t",
+                    orderId: "1o",
+                    amount: 100,
+                    status: "approved",
+                    createAt: new Date(),
+                    updateAt: new Date(),
+                });
+
+                const input: PlaceOrderInputDto = {
+                    clientId: "1c",
+                    products: [{ productId: "1" }, { productId: "2" }]
+                };
+
+                let output = await placeOrderUseCase.execute(input);
+
+                expect(output.invoiceId).toBe("1i");
+                expect(output.total).toBe(70);
+                expect(output.products).toStrictEqual([
+                    { productId: "1" },
+                    { productId: "2" },
+                ]);
+                expect(mockClientFacade.find).toHaveBeenCalledTimes(1);
+                expect(mockClientFacade.find).toHaveBeenCalledWith({id: "1c"});
+                expect(mockValidateProducts).toHaveBeenCalledTimes(1);
+                expect(mockGetProduct).toHaveBeenCalledTimes(2);
+                expect(mockCheckoutRepository.addOrder).toHaveBeenCalledTimes(1);
+                expect(mockPaymentFacade.process).toHaveBeenCalledTimes(1);
+                expect(mockPaymentFacade.process).toHaveBeenCalledWith({
+                    orderId: output.id,
+                    amount: output.total
+                });
+                expect(mockInvoiceFacade.generateInvoice).toHaveBeenCalledTimes(1);
+                expect(mockInvoiceFacade.generateInvoice).toHaveBeenCalledWith({
+                    name: clientProps.name,
+                    document: clientProps.document,
+                    street: clientProps.street,
+                    number: clientProps.number,
+                    complement: clientProps.complement,
+                    city: clientProps.city,
+                    state: clientProps.state,
+                    zipCode: clientProps.zipcode,
+                    items: [
+                        {
+                            id: products[1].id.id,
+                            name: products[1].name,
+                            price: products[1].salesPrice,
+                        },
+                        {
+                            id: products[2].id.id,
+                            name: products[2].name,
+                            price: products[2].salesPrice,
+                        }
+                    ],
+                });
             });
         });
     });
