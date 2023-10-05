@@ -7,7 +7,6 @@ import { productsRoute } from "./routes/product.route";
 import { clientsRoute } from "./routes/client.route";
 import { checkoutRoute } from "./routes/checkout.route";
 import { invoicesRoute } from "./routes/invoice.route";
-import TransactionModel from "../modules/payment/repository/transaction.model";
 import { InvoiceItemModel } from "../modules/invoice/repository/invoice-item.model";
 
 export const app: Express = express();
